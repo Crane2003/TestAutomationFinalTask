@@ -1,5 +1,6 @@
 # Automated testing in .NET Final Task 
 Task description:
+
 Launch URL: https://www.saucedemo.com/
 
 UC-1 Test Login form with empty credentials:
