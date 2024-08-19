@@ -6,149 +6,124 @@ using TestAutomationFinalTask.Utils;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerClass, MaxParallelThreads = 4)]
 namespace TestAutomationFinalTask.Tests;
-public class LoginTests : IDisposable
+
+[Collection("Edge collection")]
+public class LoginTests : IClassFixture<EdgeWebDriverFixture>, IDisposable
 {
+    private bool _disposed;
+
     private readonly IWebDriver _driver;
     private readonly LoginPage _loginPage;
     private readonly string randomCredentials = "qwerty";
     public LoginTests()
     {
-        _driver = WebDriverManager.CreateDriver("edge");
+        EdgeWebDriverFixture fixture = new();
+        _driver = fixture.Driver;
         _loginPage = new LoginPage(_driver);
         _loginPage.Navigate();
-        Logger.Log("Navigated to the Login page.");
+        LogNavigation();
     }
 
     [Theory]
-    [InlineData("Username is required")]
-    public void TestLoginForm_EmptyFields_UsernameIsRequiredError(string expectedMessage)
+    [MemberData(nameof(TestData.EmptyFieldData), MemberType = typeof(TestData))]
+    public void GivenEmptyFields_WhenLoginIsAttempted_ThenUsernameErrorMessageIsDisplayed(string expectedMessage)
     {
-        try
-        {
-            Logger.Log($"Testing login with empty inputs");
-            _loginPage.EnterUsername(randomCredentials);
-            _loginPage.EnterPassword(randomCredentials);
-            _loginPage.ClearFields();
-            _loginPage.ClickLogin();
+        LogParameters(string.Empty, string.Empty);
 
-            _loginPage.GetErrorMessage().Should().Contain(expectedMessage);
-            Logger.Log($"Error message: {expectedMessage}.");
-            Logger.Log("Test passed.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log($"Test failed with exception: {ex.Message}");
-            Logger.Log($"Stack Trace: {ex.StackTrace}");
+        _loginPage.EnterUsername(randomCredentials);
+        _loginPage.EnterPassword(randomCredentials);
+        _loginPage.ClearFields();
+        _loginPage.ClickLogin();
 
-            throw;
-        }
-        finally
-        {
-            Logger.Log("Test completed.");
-        }
+        _loginPage.GetErrorMessage().Should().Contain(expectedMessage);
+
+        LogExpectedMessage(expectedMessage);
+        LogTestCompleted();
     }
 
     [Theory]
-    [InlineData("standard_user", "Password is required")]
-    public void TestLoginForm_EmptyPassword_PasswordIsRequiredError(string username, string expectedMessage)
+    [MemberData(nameof(TestData.EmptyPasswordData), MemberType = typeof(TestData))]
+    public void GivenUsernameAndEmptyPassword_WhenLoginIsAttempted_ThenPasswordErrorMessageIsDisplayed(string username, string expectedMessage)
     {
-        try
-        {
-            Logger.Log($"Testing login with Username: {username}, empty password");
-            _loginPage.EnterUsername(username);
-            _loginPage.EnterPassword(randomCredentials);
-            _loginPage.ClearPasswordField();
-            _loginPage.ClickLogin();
+        LogParameters(username, string.Empty);
 
-            _loginPage.GetErrorMessage().Should().Contain(expectedMessage);
-            Logger.Log($"Error message: {expectedMessage}.");
-            Logger.Log("Test passed.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log($"Test failed with exception: {ex.Message}");
-            Logger.Log($"Stack Trace: {ex.StackTrace}");
+        _loginPage.EnterUsername(username);
+        _loginPage.EnterPassword(randomCredentials);
+        _loginPage.ClearPasswordField();
+        _loginPage.ClickLogin();
 
-            throw;
-        }
-        finally
-        {
-            Logger.Log("Test completed.");
-        }
+        _loginPage.GetErrorMessage().Should().Contain(expectedMessage);
+
+        LogExpectedMessage(expectedMessage);
+        LogTestCompleted();
+
     }
 
     [Theory]
-    [InlineData("standard_user", "secret_sauce", "Swag Labs")]
-    public void TestLoginForm_AcceptedCredentials_DashboardContainsSwagLabs(string username, string password, string expectedMessage)
+    [MemberData(nameof(TestData.ValidLoginData), MemberType = typeof(TestData))]
+    public void GivenValidCredentials_WhenLoginIsAttempted_ThenDashboardTitleIsDisplayed(string username, string password, string expectedMessage)
     {
-        try
-        {
-            Logger.Log($"Testing login with Username: {username}, Password: {password}");
-            _loginPage.EnterUsername(username);
-            _loginPage.EnterPassword(password);
-            _loginPage.ClickLogin();
-            _loginPage.GetDashboardTitle().Should().Be(expectedMessage);
-            Logger.Log($"Dashboard title: {expectedMessage}.");
-            Logger.Log("Test passed.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Log($"Test failed with exception: {ex.Message}");
-            Logger.Log($"Stack Trace: {ex.StackTrace}");
+        LogParameters(username, password);
 
-            throw;
-        }
-        finally
-        {
-            Logger.Log("Test completed.");
-        }
+        _loginPage.EnterUsername(username);
+        _loginPage.EnterPassword(password);
+        _loginPage.ClickLogin();
+        _loginPage.GetDashboardTitle().Should().Be(expectedMessage);
+
+        LogSuccessfulLogin(expectedMessage);
+        LogTestCompleted();
     }
 
     public void Dispose()
     {
-        _driver.Quit();
-        Logger.Log("Browser closed.\n");
-
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
-}
-    /*  Run all tests in one method
-        [Theory]
-        [MemberData(nameof(DataProvider.LoginTestData), MemberType = typeof(DataProvider))]
-        public void TestLoginForm(string username, string password, string expectedMessage)
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
         {
-            try
+            if (disposing)
             {
-                Logger.Log($"Testing login with Username: {username}, Password: {password}");
-                _loginPage.EnterUsername(randomCredentials);
-                _loginPage.EnterPassword(randomCredentials);
-                _loginPage.ClearFields();
-                _loginPage.EnterUsername(username);
-                _loginPage.EnterPassword(password);
-                _loginPage.ClickLogin();
+                _driver.Quit();
+                LogBrowserClosed();
 
-                if (expectedMessage == "Swag Labs")
-                {
-                    _loginPage.GetDashboardTitle().Should().Be(expectedMessage);
-                    Logger.Log($"Dashboard title: {expectedMessage}.");
-                }
-                else
-                {
-                    _loginPage.GetErrorMessage().Should().Contain(expectedMessage);
-                    Logger.Log($"Error message: {expectedMessage}.");
-                }
+                _driver.Dispose();
+            }
 
-                Logger.Log("Test passed.");
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Test failed with exception: {ex.Message}");
-                Logger.Log($"Stack Trace: {ex.StackTrace}");
+            _disposed = true;
+        }
+    }
 
-                throw;
-            }
-            finally
-            {
-                Logger.Log("Test completed.");
-            }
-        }*/
+    private static void LogTestCompleted()
+    {
+        Logger.Log("Test passed.");
+        Logger.Log("Test completed.");
+    }
+
+    private static void LogBrowserClosed()
+    {
+        Logger.Log("Browser closed.\n");
+    }
+
+    private static void LogNavigation()
+    {
+        Logger.Log("Navigated to the Login page.");
+    }
+
+    private static void LogParameters(string username, string password)
+    {
+        Logger.Log($"Testing login with Username: {username}, Password: {password}");
+    }
+
+    private static void LogExpectedMessage(string message)
+    {
+        Logger.Log($"Error message: {message}.");
+    }
+
+    private static void LogSuccessfulLogin(string message)
+    {
+        Logger.Log($"Dashboard title: {message}.");
+    }
+}

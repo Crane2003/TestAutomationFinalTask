@@ -22,6 +22,12 @@
     <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="127.0.6533.11900" />
     <PackageReference Include="Selenium.WebDriver.GeckoDriver.Win64" Version="0.35.0" />
     <PackageReference Include="Selenium.WebDriver.IEDriver" Version="4.14.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SpecFlow" Version="3.9.74" />
+    <PackageReference Include="SpecFlow.xUnit" Version="3.9.74" />
     <PackageReference Include="xunit" Version="2.9.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <PrivateAssets>all</PrivateAssets>

@@ -8,19 +8,12 @@ public static class WebDriverManager
 {
     public static IWebDriver CreateDriver(string browser)
     {
-        IWebDriver driver;
-        switch (browser.ToLower())
+        IWebDriver driver = browser.ToLower() switch
         {
-            case "firefox":
-                driver = new FirefoxDriver();
-                break;
-            case "edge":
-                driver = new EdgeDriver();
-                break;
-            default:
-                driver = new EdgeDriver();
-                break;
-        }
+            "firefox" => new FirefoxDriver(),
+            "edge" => new EdgeDriver(),
+            _ => new EdgeDriver(),
+        };
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
 
         return driver;
