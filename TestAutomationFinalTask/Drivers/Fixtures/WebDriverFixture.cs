@@ -1,15 +1,17 @@
 ﻿using OpenQA.Selenium;
+using TestAutomationFinalTask.Drivers.DriverAbstractFactory;
 
-namespace TestAutomationFinalTask.Drivers;
+namespace TestAutomationFinalTask.Drivers.Fixtures;
 
 public class WebDriverFixture : IDisposable
 {
     private bool _disposed;
     public IWebDriver Driver { get; private set; }
 
-    public WebDriverFixture(string browser)
+    public WebDriverFixture(IWebDriverFactory factory)
     {
-        Driver = WebDriverManager.CreateDriver(browser);
+        Driver = factory.CreateDriver();
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
     }
 
     public void Dispose()

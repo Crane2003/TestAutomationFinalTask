@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using OpenQA.Selenium;
-using TestAutomationFinalTask.Drivers;
+using TestAutomationFinalTask.Drivers.Fixtures;
 using TestAutomationFinalTask.Pages;
 using TestAutomationFinalTask.Utils;
 
