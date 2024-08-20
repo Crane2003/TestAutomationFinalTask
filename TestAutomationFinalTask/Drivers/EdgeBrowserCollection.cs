@@ -1,6 +1,6 @@
 ﻿namespace TestAutomationFinalTask.Drivers;
 
 [CollectionDefinition("Edge collection", DisableParallelization = false)]
-public class EdgeBrowserCollection  : ICollectionFixture<EdgeBrowserCollection>
+public class EdgeBrowserCollection : ICollectionFixture<EdgeWebDriverFixture>
 {
 }

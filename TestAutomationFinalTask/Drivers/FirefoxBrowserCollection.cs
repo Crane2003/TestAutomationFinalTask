@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TestAutomationFinalTask.Drivers;
 
-namespace TestAutomationFinalTask.Drivers;
-
-[CollectionDefinition("Firefox Browser", DisableParallelization = false)]
+[CollectionDefinition("Firefox collection", DisableParallelization = false)]
 public class FirefoxBrowserCollection : ICollectionFixture<FirefoxWebDriverFixture>
 {
 }

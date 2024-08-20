@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 
@@ -12,6 +13,7 @@ public static class WebDriverManager
         {
             "firefox" => new FirefoxDriver(),
             "edge" => new EdgeDriver(),
+            "chrome" => new ChromeDriver(),
             _ => new EdgeDriver(),
         };
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);

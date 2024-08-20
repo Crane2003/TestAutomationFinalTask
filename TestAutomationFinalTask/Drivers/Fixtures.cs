@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TestAutomationFinalTask.Drivers
+﻿namespace TestAutomationFinalTask.Drivers
 {
     public class EdgeWebDriverFixture : WebDriverFixture
     {
@@ -16,6 +10,13 @@ namespace TestAutomationFinalTask.Drivers
     public class FirefoxWebDriverFixture : WebDriverFixture
     {
         public FirefoxWebDriverFixture() : base("firefox")
+        {
+        }
+    }
+
+    public class ChromeWebDriverFixture : WebDriverFixture
+    {
+        public ChromeWebDriverFixture() : base("chrome")
         {
         }
     }
