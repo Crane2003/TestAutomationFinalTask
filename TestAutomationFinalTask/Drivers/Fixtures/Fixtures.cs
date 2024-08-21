@@ -4,24 +4,22 @@ namespace TestAutomationFinalTask.Drivers.Fixtures
 {
     public class FirefoxWebDriverFixture : WebDriverFixture
     {
-        public FirefoxWebDriverFixture() : base(new FirefoxDriverManager())
+        public FirefoxWebDriverFixture() : base(new FirefoxDriverFactory())
         {
         }
     }
 
     public class EdgeWebDriverFixture : WebDriverFixture
     {
-        public EdgeWebDriverFixture() : base(new EdgeDriverManager())
+        public EdgeWebDriverFixture() : base(new EdgeDriverFactory())
         {
         }
     }
 
     public class ChromeWebDriverFixture : WebDriverFixture
     {
-        public ChromeWebDriverFixture() : base(new ChromeDriverManager())
+        public ChromeWebDriverFixture() : base(new ChromeDriverFactory())
         {
         }
     }
-
-
 }

@@ -3,17 +3,11 @@ using OpenQA.Selenium.Support.UI;
 
 namespace TestAutomationFinalTask.Pages;
 
-public class LoginPage
+public class LoginPage(IWebDriver driver)
 {
-    private readonly IWebDriver _driver;
+    private readonly IWebDriver _driver = driver;
     private readonly string _url = "https://www.saucedemo.com/";
-    private readonly WebDriverWait _wait;
-
-    public LoginPage(IWebDriver driver)
-    {
-        _driver = driver;
-        _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-    }
+    private readonly WebDriverWait _wait = new(driver, TimeSpan.FromSeconds(5));
 
     private IWebElement UsernameField => WaitAndFindElement(By.CssSelector("#user-name"));
     private IWebElement PasswordField => WaitAndFindElement(By.CssSelector("#password"));
@@ -30,20 +24,29 @@ public class LoginPage
         IWebElement DashboardTitle = WaitAndFindElement(By.CssSelector(".app_logo"));
         return DashboardTitle.Text;
     }
-    public void ClearFields()
+    public void ClearInputFields()
     {
         // UsernameField.Clear() doesn`t work
-        while (!UsernameField.GetAttribute("value").Equals(""))
-        {
-            UsernameField.SendKeys(Keys.Backspace);
-        }
-        ClearPasswordField();
+        ClearFields(UsernameField, PasswordField);
     }
     public void ClearPasswordField()
     {
-        while (!PasswordField.GetAttribute("value").Equals(""))
+        ClearField(PasswordField);
+    }
+
+    private static void ClearFields(params IWebElement[] fields)
+    {
+        foreach (var field in fields)
         {
-            PasswordField.SendKeys(Keys.Backspace);
+            ClearField(field);
+        }
+    }
+
+    private static void ClearField(IWebElement field)
+    {
+        while (!field.GetAttribute("value").Equals(""))
+        {
+            field.SendKeys(Keys.Backspace);
         }
     }
 

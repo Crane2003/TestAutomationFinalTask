@@ -5,7 +5,7 @@ using OpenQA.Selenium.Firefox;
 
 namespace TestAutomationFinalTask.Drivers.DriverAbstractFactory
 {
-    public class FirefoxDriverManager : IWebDriverFactory
+    public class FirefoxDriverFactory : IWebDriverFactory
     {
         public IWebDriver CreateDriver()
         {
@@ -13,7 +13,7 @@ namespace TestAutomationFinalTask.Drivers.DriverAbstractFactory
         }
     }
 
-    public class EdgeDriverManager : IWebDriverFactory
+    public class EdgeDriverFactory : IWebDriverFactory
     {
         public IWebDriver CreateDriver()
         {
@@ -21,7 +21,7 @@ namespace TestAutomationFinalTask.Drivers.DriverAbstractFactory
         }
     }
 
-    public class ChromeDriverManager : IWebDriverFactory
+    public class ChromeDriverFactory : IWebDriverFactory
     {
         public IWebDriver CreateDriver()
         {
